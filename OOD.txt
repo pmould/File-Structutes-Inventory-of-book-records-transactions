@@ -1,0 +1,106 @@
+
+Written by Paul Mould
+Analysis & Design Discussion for Part III
+
+
+1) The Goal of the client program:
+
+* The goal is for the program ishandle the inventory for a small book company using sequential records. The  program should perform the transaction as specified in the transaction file. The program must go through the master binary file and transaction file and create two new files, a new master binary file of book records and an error text file named ERRORS. The program is supposed to read in each record in the new master file and display them to the screen. The program is supposed handle transactions for adding records, deleting records and changing the on hand amount.
+
+
+
+
+
+2) Specification of input and output used by the client program:
+> INPUT FILES
+* Transaction File:
+* The transaction File is a binary file of book records. This file is an input file used to make the new master file
+* Master File:
+* The master file is a binary file of book records. This file is used as an input file used to make the new master file 
+* New Master File:
+* The new master file is a used as an input file. The records from the new master file are read and displayed to the screen
+* 
+> OUTPUT FILES
+* New Master File:
+* The new master file is a also used as an output file. The new master file is updated by  performing transaction based on the transaction records of the transaction file and adding records from both the transaction file and the master file to it
+* ERROR File:
+> An error file is a text file. When a transaction from the transaction file cannot be performed a error message is written out to the ERROR file
+
+
+
+
+
+3) Outline of the algorithm used by my client program.
+
+Open the transaction file
+Open the master file
+Open the new master file
+
+Set a bufferM, to store the current Record in the master File
+Set a bufferN, to store the Book Record for a changed Record
+Set a bufferT to hold a Transaction Record
+         While (pointer is not at end of the transaction file read in record from Transaction file into the buffer, bufferT) Do
+         	
+         	      While (bufferT.ISBN >bufferM.ISBN) Do
+         		 Write bufferM to the new Master File
+         		 Read in next record from the master file into the bufferM buffer
+         	      End While
+               If the read/write pointer of the master file is at the end of the file
+         	Set addLastRecord to true
+               End If
+                 If (bufferT.ToDo == Add) then
+     If (bufferT.ISBN == bufferM.ISBN)
+ 			Print error Message: “Record already exists”
+			Write bufferM  to the new MasterFile
+			Read next record to bufferM
+         		Else If (bufferT.ISBN < bufferM.ISBN or addLastRecord == true)
+			Write bufferT to the new master file	
+		End If
+		End If
+End If
+                                                If (bufferT.ToDo == Delete) then 
+				  If (buffer.ISBN == buffer.ISBN)
+						Do not add record to new master File
+						Read new bufferT
+						Read new bufferM
+		      		Else 
+					Print error message: ‘’Record to be deleted does not exist”
+			       	End If
+		        End If
+	                            If (bufferT.ToDo == ChangeOnhand)
+					If (bufferT.ISBN == bufferM.ISBN) then
+						bufferN = bufferM
+						bufferN.onhand = bufferT.onhand + bufferM.onhand
+						If (bufferN.onhand < 0)
+							Print an Error Message: “Negative onhand”
+							bufferN.onhand = 0
+						Write bufferN to new master file 
+						End If
+					Else
+						Print an error message: “No such ISBN”
+					End If	
+		         End If
+                 If (bufferT.ToDo == ChangePrice)
+				If (bufferT.ISBN == bufferM.ISBN)
+						bufferN = bufferM
+						bufferN.price = bufferT.price
+						Write bufferN to new master file
+				Else
+					Print an error Message: “No such ISBN”
+			End If
+		      End If
+	End While	
+
+	Set New Master file write pointer to point to the beginning of the file
+	While (New Master File write pointer is not at the end of the file read a record from the file) Do
+		Output Book Record 	to the screen
+	End While
+Close the transaction file
+Close the master file
+Close the new master file
+
+
+
+Effeciency of the algorithm:
+   	My algorithm is efficient because it has at most 2 records and 1 transaction record in memory at a time. My algorithm is efficient because it reads in each record of the master file and transaction file once. Therefore we minimize the memory usage.  I made my algorithm more efficient by reading the master file and the transaction file side by side. In my algorithm I added records from the new master file by copying over book records from both the master file and the transaction file.  This made my algorithm simpler because there was cases where updating the new master file from one file rather than the other made the task simpler.
+
